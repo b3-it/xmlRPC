@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<response>
+    <struct>
+        <member>
+            <name>foo</name>
+            <value><int>1</int></value>
+        </member>
+        <member>
+            <name>bar</name>
+            <value><int>2</int></value>
+        </member>
+    </struct>
+</response>
