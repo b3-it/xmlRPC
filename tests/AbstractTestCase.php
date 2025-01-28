@@ -5,18 +5,11 @@ namespace B3it\XmlRpc\Tests;
 use Dotenv\Dotenv;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
-use Symfony\Component\Serializer\Mapping\Loader\LoaderChain;
-use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateIntervalNormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -31,22 +24,11 @@ abstract class AbstractTestCase extends TestCase
             return $this->serializer;
         }
 
-        $loaders = new LoaderChain([
-            new AttributeLoader()
-        ]);
-
-        $classMetadataFactory = new ClassMetadataFactory($loaders);
-        $nameConverter = new MetadataAwareNameConverter($classMetadataFactory);
-
-        //$objectNormalizer = new ObjectNormalizer($classMetadataFactory, $nameConverter);
         $encoders = [new XmlEncoder()];
         $normalizers = [
             new DateTimeNormalizer(),
-            new DateTimeZoneNormalizer(),
-            new DateIntervalNormalizer(),
             new CustomNormalizer(),
-            new ArrayDenormalizer(),
-            //$objectNormalizer,
+            new ArrayDenormalizer()
         ];
         return $this->serializer = new Serializer($normalizers, $encoders);
     }
