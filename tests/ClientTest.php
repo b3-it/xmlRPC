@@ -28,7 +28,9 @@ class ClientTest extends AbstractTestCase
         // some data might need to deserialize twice!
         $data = $response->toPHP()[0];
         $response = $this->client->deserializeResponse($data);
-        self::assertNotEmpty($response->toAssocArray());
+        $responseData = $response->toAssocArray();
+        self::assertNotEmpty($responseData);
+        self::assertArrayHasKey('ErrorCode', $responseData);
     }
 
 

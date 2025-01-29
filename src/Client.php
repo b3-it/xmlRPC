@@ -8,20 +8,25 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class Client
 {
 
     public function __construct(
-        protected ClientInterface $client,
+        protected ClientInterface                  $client,
         protected readonly RequestFactoryInterface $requestFactory,
-        protected readonly StreamFactoryInterface $streamFactory,
-        protected readonly SerializerInterface $serializer,
-        protected string $url,
-        protected string $contentType = 'text/xml'
+        protected readonly StreamFactoryInterface  $streamFactory,
+        protected string                           $url,
+        protected ?SerializerInterface             $serializer = null,
+        protected string                           $contentType = 'text/xml'
     )
     {
+        $this->serializer = $serializer ?? $this->__createSerializer();
     }
 
     /**
@@ -50,5 +55,16 @@ class Client
     public function deserializeResponse(string $body, array $serializerContext = []): Response
     {
         return $this->serializer->deserialize($body, Response::class, 'xml', $serializerContext);
+    }
+
+    protected function __createSerializer(): SerializerInterface
+    {
+        $encoders = [new XmlEncoder()];
+        $normalizers = [
+            new DateTimeNormalizer(),
+            new CustomNormalizer(),
+            new ArrayDenormalizer()
+        ];
+        return new Serializer($normalizers, $encoders);
     }
 }
