@@ -42,6 +42,6 @@ class ClientTest extends AbstractTestCase
         $psr18Client = new GuzzleClient();
         $psr7Factory = new HttpFactory();
 
-        $this->client = new Client($psr18Client, $psr7Factory, $psr7Factory, $this->getSerializer(), $_ENV['CLIENT_URL']);
+        $this->client = new Client($psr18Client, $psr7Factory, $psr7Factory, $_ENV['CLIENT_URL']);
     }
 }
